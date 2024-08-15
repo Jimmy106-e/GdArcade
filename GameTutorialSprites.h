@@ -45,3 +45,6 @@ unsigned char block[64] = {
   TS_8b_Black, TS_8b_Black, TS_8b_Black, TS_8b_Black, TS_8b_Black, TS_8b_Black, TS_8b_Black, TS_8b_Black,
 };
 
+unsigned char temp[1] = {
+  ALPHA
+};

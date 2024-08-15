@@ -46,6 +46,7 @@ bool isJumping = false;
 ts_char cube8 = { 40, 17, 8, 8, 0, GDCUBE8, 1, 0, -5, 2, 0, 0 };
 ts_sprite Spike = { 70, 48, 8, 8, 0, spike, true };
 ts_sprite Block = { 62, 48, 8, 8, 0, block, false };
+ts_sprite scene[] = {Block, Spike};
 
 int groundLevel = 48;
 const uint8_t bgColour = TS_8b_Red;
@@ -84,11 +85,11 @@ void loop() {
   display.endTransfer();
 
   // Spike
-  display.setX(Spike.x, Spike.x+Spike.width-1);
-  display.setY(Spike.y, Spike.y+Spike.height-1);
+  display.setX(Spike.x, Spike.x + Spike.width - 1);
+  display.setY(Spike.y, Spike.y + Spike.height - 1);
   //now start a data transfer
   display.startData();
-  display.writeBuffer(Spike.bitmap,Spike.width*Spike.height);
+  display.writeBuffer(Spike.bitmap, Spike.width * Spike.height);
   display.endTransfer();
 
   // Block
@@ -116,7 +117,7 @@ void moveChar() {
   cube8.velocityY += cube8.gravity;
   cube8.y += cube8.velocityY;
 
-  checkCollision(Block);
+  checkCollision();
   checkDeath(Spike);
 
   if (cube8.y >= groundLevel) {
@@ -144,44 +145,55 @@ void checkDeath(ts_sprite object) {
   }
 }
 
-void checkCollision(ts_sprite object) {
-  // Calculate the sides of both objects
-  int leftA = cube8.x;
-  int rightA = cube8.x + cube8.width;
-  int topA = cube8.y;
-  int bottomA = cube8.y + cube8.height;
+void checkCollision() {
+  ts_sprite object = {0,0,0,0,0,temp,false};
+  for (int i = 0; i < 2 && scene[i].deadly != true; i++) {
+    object = scene[i];
+    // Calculate the sides of both objects
+    int leftA = cube8.x;
+    int rightA = cube8.x + cube8.width;
+    int topA = cube8.y;
+    int bottomA = cube8.y + cube8.height;
 
-  int leftB = object.x;
-  int rightB = object.x + object.width;
-  int topB = object.y;
-  int bottomB = object.y + object.height;
+    int leftB = object.x;
+    int rightB = object.x + object.width;
+    int topB = object.y;
+    int bottomB = object.y + object.height;
 
-  bool isCollidingVertically = false;
+    bool isCollidingVertically = false;
 
-  // Check if the objects are colliding
-  if (bottomA > topB && topA < topB && rightA > leftB && leftA < rightB) {
-        // Collision on the top side
-        cube8.y = topB - cube8.height;  // Adjust position to land on the platform
-        isJumping = false;  // Allow jumping again
-        isCollidingVertically = true;
-        cube8.velocityY = 0;  // Stop falling
-    } 
+    // Check if the objects are colliding
+    if (bottomA > topB && topA < topB && rightA > leftB && leftA < rightB) {
+      // Collision on the top side
+      cube8.y = topB - cube8.height;  // Adjust position to land on the platform
+      isJumping = false;              // Allow jumping again
+      isCollidingVertically = true;
+      cube8.velocityY = 0;  // Stop falling
+    }
 
     // Handle bottom collision (if jumping up into a platform)
     if (!isCollidingVertically && topA < bottomB && bottomA > bottomB && rightA > leftB && leftA < rightB) {
-        cube8.y = bottomB;  // Adjust position below the platform
-        cube8.velocityY = 0;  // Stop upward movement
+      cube8.y = bottomB;    // Adjust position below the platform
+      cube8.velocityY = 0;  // Stop upward movement
     }
 
     // Check for horizontal collisions only if the player is not colliding vertically
     if (!isCollidingVertically) {
-        // Check for collision on the left side
-        if (rightA > leftB && leftA < leftB && bottomA > topB && topA < bottomB) {
-            cube8.x = leftB - cube8.width;  // Adjust position to exactly to the left of the platform
-        } 
-        // Check for collision on the right side
-        else if (leftA < rightB && rightA > rightB && bottomA > topB && topA < bottomB) {
-            cube8.x = rightB;  // Adjust position to exactly to the right of the platform
-        }
+      // Check for collision on the left side
+      if (rightA > leftB && leftA < leftB && bottomA > topB && topA < bottomB) {
+        cube8.x = leftB - cube8.width;  // Adjust position to exactly to the left of the platform
+      }
+      // Check for collision on the right side
+      else if (leftA < rightB && rightA > rightB && bottomA > topB && topA < bottomB) {
+        cube8.x = rightB;  // Adjust position to exactly to the right of the platform
+      }
     }
+  }
+}
+
+void displayScene() {
+  ts_sprite object = {0,0,0,0,0,temp,false};
+  for (int i = 0; i < 2; i++){
+    object = scene[i];
+  }
 }
