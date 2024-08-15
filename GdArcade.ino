@@ -46,7 +46,7 @@ bool isJumping = false;
 ts_char cube8 = { 40, 17, 8, 8, 0, GDCUBE8, 1, 0, -5, 2, 0, 0 };
 ts_sprite Spike = { 70, 48, 8, 8, 0, spike, true };
 ts_sprite Block = { 62, 48, 8, 8, 0, block, false };
-ts_sprite scene[] = {Block, Spike};
+ts_sprite scene[] = { Block, Spike };
 
 int groundLevel = 48;
 const uint8_t bgColour = TS_8b_Red;
@@ -84,21 +84,23 @@ void loop() {
   display.writeBuffer(cube8.bitmap, cube8.width * cube8.height);
   display.endTransfer();
 
-  // Spike
-  display.setX(Spike.x, Spike.x + Spike.width - 1);
-  display.setY(Spike.y, Spike.y + Spike.height - 1);
-  //now start a data transfer
-  display.startData();
-  display.writeBuffer(Spike.bitmap, Spike.width * Spike.height);
-  display.endTransfer();
+  displayScene();
 
-  // Block
-  display.setX(Block.x, Block.x + Block.width - 1);
-  display.setY(Block.y, Block.y + Block.height - 1);
-  //now start a data transfer
-  display.startData();
-  display.writeBuffer(Block.bitmap, Block.width * Block.height);
-  display.endTransfer();
+  // // Spike
+  // display.setX(Spike.x, Spike.x + Spike.width - 1);
+  // display.setY(Spike.y, Spike.y + Spike.height - 1);
+  // //now start a data transfer
+  // display.startData();
+  // display.writeBuffer(Spike.bitmap, Spike.width * Spike.height);
+  // display.endTransfer();
+
+  // // Block
+  // display.setX(Block.x, Block.x + Block.width - 1);
+  // display.setY(Block.y, Block.y + Block.height - 1);
+  // //now start a data transfer
+  // display.startData();
+  // display.writeBuffer(Block.bitmap, Block.width * Block.height);
+  // display.endTransfer();
 
   display.setFont(thinPixel7_10ptFontInfo);
   display.setCursor(12, 12);
@@ -146,7 +148,8 @@ void checkDeath(ts_sprite object) {
 }
 
 void checkCollision() {
-  ts_sprite object = {0,0,0,0,0,temp,false};
+  //look through scene and check for collision
+  ts_sprite object = { 0, 0, 0, 0, 0, temp, false };
   for (int i = 0; i < 2 && scene[i].deadly != true; i++) {
     object = scene[i];
     // Calculate the sides of both objects
@@ -192,8 +195,13 @@ void checkCollision() {
 }
 
 void displayScene() {
-  ts_sprite object = {0,0,0,0,0,temp,false};
-  for (int i = 0; i < 2; i++){
+  ts_sprite object = { 0, 0, 0, 0, 0, temp, false };
+  for (int i = 0; i < 2; i++) {
     object = scene[i];
+    display.setX(object.x, object.x + object.width - 1);
+    display.setY(object.y, object.y + object.height - 1);
+    display.startData();
+    display.writeBuffer(object.bitmap, object.width * object.height);
+    display.endTransfer();
   }
 }
