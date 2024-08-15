@@ -141,7 +141,7 @@ void moveChar() {
 
 void checkDeath(ts_sprite object) {
   if (object.deadly) {
-    if (cube8.x > object.x - cube8.width && cube8.x < object.x + cube8.width) {
+    if (cube8.x > object.x - cube8.width && cube8.x < object.x + cube8.width && cube8.y == object.y - 1) {
       if (!isJumping) cube8.x = 40;
     }
   }
