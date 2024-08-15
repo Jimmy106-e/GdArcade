@@ -140,11 +140,32 @@ void moveChar() {
 //collision
 
 void checkDeath(ts_sprite object) {
-  if (object.deadly) {
-    if (cube8.x > object.x - cube8.width && cube8.x < object.x + cube8.width && cube8.y == object.y - 1) {
-      if (!isJumping) cube8.x = 40;
+    if (object.deadly) {
+        // Iterate over each pixel of the player's sprite
+        for (int px = 0; px < cube8.width; px++) {
+            for (int py = 0; py < cube8.height; py++) {
+                // Calculate the actual position of the pixel in the game world
+                int worldX = cube8.x + px;
+                int worldY = cube8.y + py;
+
+                // Check if this pixel is within the bounds of the object
+                if (worldX >= object.x && worldX < object.x + object.width &&
+                    worldY >= object.y && worldY < object.y + object.height) {
+                    
+                    // Calculate the corresponding pixel in the object's bitmap
+                    int objectPixelX = worldX - object.x;
+                    int objectPixelY = worldY - object.y;
+                    
+                    // Check if the pixel in the object's bitmap is not "ALPHA"
+                    if (object.bitmap[objectPixelY * object.width + objectPixelX] != ALPHA) {
+                        // Trigger the player's death logic
+                        cube8.x = 40;  // Reset the player's position or any other death logic
+                        return;  // Exit the function early since death has occurred
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 void checkCollision() {
