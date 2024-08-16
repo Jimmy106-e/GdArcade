@@ -212,15 +212,12 @@ void displayScene() {
 }
 
 void moveScene(int moveSpeed) {
-  ts_sprite object = { 0, 0, 0, 0, 0, temp, false };
-  int newx = 0;
-  for (int i = 0; i < 2; i++) {
-    object = scene[i];
-    newx = object.x;
-    newx += moveSpeed;
-    if (newx < 0 - object.width) {
-      newx = 64 - object.width;
+    for (int i = 0; i < 2; i++) {
+        ts_sprite& object = scene[i];
+        
+        // Check if the sprite's x position is not less than zero minus its width
+        if (object.x < 0-object.width) {
+            object.x += moveSpeed;  // Update the sprite's x position
+        }
     }
-    else object.x = newx;
-  }
 }
