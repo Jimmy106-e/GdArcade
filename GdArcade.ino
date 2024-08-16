@@ -85,29 +85,13 @@ void loop() {
   display.endTransfer();
 
   displayScene();
-
-  // // Spike
-  // display.setX(Spike.x, Spike.x + Spike.width - 1);
-  // display.setY(Spike.y, Spike.y + Spike.height - 1);
-  // //now start a data transfer
-  // display.startData();
-  // display.writeBuffer(Spike.bitmap, Spike.width * Spike.height);
-  // display.endTransfer();
-
-  // // Block
-  // display.setX(Block.x, Block.x + Block.width - 1);
-  // display.setY(Block.y, Block.y + Block.height - 1);
-  // //now start a data transfer
-  // display.startData();
-  // display.writeBuffer(Block.bitmap, Block.width * Block.height);
-  // display.endTransfer();
-
   display.setFont(thinPixel7_10ptFontInfo);
   display.setCursor(12, 12);
 
   // delay(4);
   frame++;
   moveChar();
+  moveScene(2);
   // checkForCollision(Spike);
   timer = millis() - timer;
 }
@@ -224,5 +208,19 @@ void displayScene() {
     display.startData();
     display.writeBuffer(object.bitmap, object.width * object.height);
     display.endTransfer();
+  }
+}
+
+void moveScene(int moveSpeed) {
+  ts_sprite object = { 0, 0, 0, 0, 0, temp, false };
+  int newx = 0;
+  for (int i = 0; i < 2; i++) {
+    object = scene[i];
+    newx = object.x;
+    newx += moveSpeed;
+    if (newx < 0 - object.width) {
+      newx = 64 - object.width;
+    }
+    else object.x = newx;
   }
 }
